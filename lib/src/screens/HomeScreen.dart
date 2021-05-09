@@ -25,16 +25,42 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final int getDayOnWeek = DateTime.now().day;
+
+  String workbleDay(day) {
+    if (day > 0 && day < 4) {
+      return "Будни";
+    } else {
+      return "Выходные";
+    }
+  }
+
+  bool isWorkbleWay(day) {
+    if (day > 0 && day < 4) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       child: FutureBuilder(
         builder: (context, snapshot) {
           var showData = json.decode(snapshot.data.toString());
-          return _buildListView(showData);
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return Text("Load...");
+            default:
+              if (snapshot.hasError)
+                return Text('Error: ${snapshot.error}');
+              else
+                return _buildListView(showData);
+          }
         },
         future: DefaultAssetBundle.of(context)
-            .loadString("assets/data/NPBus_routes.json"),
+            .loadString("assets/data/bus_routes.json"),
       ),
     );
   }
@@ -53,20 +79,30 @@ class _HomePageState extends State<HomePage> {
               context: context,
               builder: (build) {
                 return ListView.builder(
-                  itemCount: showData[index]['routes'].length,
-                  itemBuilder: (context, inx) => ListTile(
-                    title: Text(showData[index]['routes'][inx]['direction']),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (ctx) => DetailScreen(
-                              sKey: showData[index]['routes'][inx]['s_key']),
+                    itemCount: showData[index]['routes'].length,
+                    itemBuilder: (context, inx) {
+                      return ListTile(
+                        title:
+                            Text(showData[index]['routes'][inx]['direction']),
+                        subtitle: Text(
+                          showData[index]['routes'][inx]['way'] == 0 ||
+                                  showData[index]['routes'][inx]['way'] == 1
+                              ? "Будни"
+                              : "Выходные",
                         ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (ctx) => DetailScreen(
+                                sKey: showData[index]['routes'][inx]['s_key'],
+                                way: showData[index]['routes'][inx]['way'],
+                              ),
+                            ),
+                          );
+                        },
                       );
-                    },
-                  ),
-                );
+                    });
               },
             );
           },
