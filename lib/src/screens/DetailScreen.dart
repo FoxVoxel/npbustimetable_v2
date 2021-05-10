@@ -4,13 +4,15 @@ import 'dart:convert';
 class DetailScreen extends StatelessWidget {
   final dynamic sKey;
   final dynamic way;
-  const DetailScreen({Key key, this.sKey, this.way}) : super(key: key);
+  final dynamic titlePage;
+  const DetailScreen({Key key, this.sKey, this.way, this.titlePage})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Расписание"),
+        title: Text(titlePage),
       ),
       body: Container(
         child: DetailPage(
@@ -68,7 +70,7 @@ class _DetailPageState extends State<DetailPage> {
                                 .toString()
                                 .split('|');
                             return AlertDialog(
-                              title: Text("Время автобуса"),
+                              title: Text("Время прибытия"),
                               content: Container(
                                 height: 150,
                                 child: ListView.builder(

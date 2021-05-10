@@ -95,6 +95,8 @@ class _HomePageState extends State<HomePage> {
                             context,
                             MaterialPageRoute(
                               builder: (ctx) => DetailScreen(
+                                titlePage: showData[index]['routes'][inx]
+                                    ['direction'],
                                 sKey: showData[index]['routes'][inx]['s_key'],
                                 way: showData[index]['routes'][inx]['way'],
                               ),
