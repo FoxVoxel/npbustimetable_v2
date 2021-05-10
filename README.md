@@ -1,16 +1,10 @@
-# npbustimetable_v2
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# Newpolotsk's bus timetable ver.2
+A simple coursework application running on flutter. The purpose of which is to display the bus schedules for destinations and stops, with the display of arrival times for them.
+##### To run it you need to follow the instructions:
+1. Install Dart and Flutter
+    * Flutter: [https://dart.dev/](https://dart.dev/)
+    * Dart: [https://flutter.dev/](https://flutter.dev/)
+2. Clone code
+3. Get to project path and run in terminal `pub get`
+4. Run in terminal `$flutter emulators --launch <device_id>`
+5. And after `$flutter run`
