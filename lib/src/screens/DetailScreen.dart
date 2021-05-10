@@ -9,7 +9,9 @@ class DetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("autobus")),
+      appBar: AppBar(
+        title: Text("Расписание"),
+      ),
       body: Container(
         child: DetailPage(
           sKey: sKey,
@@ -32,43 +34,63 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          child: Row(
-            children: [
-              Container(),
-              FutureBuilder(
-                builder: (context, snapshot) {
-                  var detailData = json.decode(snapshot.data.toString());
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.waiting:
-                      return Text("Load...");
-                    default:
-                      if (snapshot.hasError)
-                        return Text('Error: ${snapshot.error}');
-                      else {
-                        List<dynamic> bus = detailData
-                            .firstWhere((b) => b['bus'] == widget.sKey);
-                        return Container(
-                          child: ListView.builder(
-                            itemCount: bus[widget.way].length,
-                            itemBuilder: (ctx, inx) {
-                              return Text(bus[widget.sKey]['routes'][widget.way]
-                                  ['title']);
-                            },
-                          ),
+    return Container(
+      child: FutureBuilder(
+        builder: (context, snapshot) {
+          List<dynamic> jsonData = json.decode(snapshot.data.toString());
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return Text("Load...");
+            default:
+              if (snapshot.hasError)
+                return Text('Error: ${snapshot.error}');
+              else {
+                var sortData =
+                    jsonData.firstWhere((el) => el['bus'] == widget.sKey);
+                return ListView.builder(
+                  itemCount: sortData['routes'][widget.way.toString()].length,
+                  itemBuilder: (ctx, inx) {
+                    return ListTile(
+                      leading: CircleAvatar(
+                        child: Text(
+                          (inx + 1).toString(),
+                        ),
+                      ),
+                      title: Text(
+                        sortData['routes'][widget.way.toString()][inx]['title'],
+                      ),
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            var busTime = sortData['routes']
+                                    [widget.way.toString()][inx]['time']
+                                .toString()
+                                .split('|');
+                            return AlertDialog(
+                              title: Text("Время автобуса"),
+                              content: Container(
+                                height: 150,
+                                child: ListView.builder(
+                                  itemCount: busTime.length,
+                                  itemBuilder: (ctx, inx) => ListTile(
+                                    title: Text(busTime[inx]),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
                         );
-                      }
-                  }
-                },
-                future: DefaultAssetBundle.of(context)
-                    .loadString('assets/data/bus_stops.json'),
-              ),
-            ],
-          ),
-        ),
-      ],
+                      },
+                    );
+                  },
+                );
+              }
+          }
+        },
+        future: DefaultAssetBundle.of(context)
+            .loadString('assets/data/bus_stops.json'),
+      ),
     );
   }
 }
