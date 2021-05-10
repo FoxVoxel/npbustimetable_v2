@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 
+// Детальное отображения движения автобуса по маршруту
 class DetailScreen extends StatelessWidget {
+  // Специальный ключ <Маршрут автобуса>
   final dynamic sKey;
+  // Направление автобуса
   final dynamic way;
+  // Заголовок страницы исходя из маршрута
   final dynamic titlePage;
   const DetailScreen({Key key, this.sKey, this.way, this.titlePage})
       : super(key: key);
@@ -25,6 +29,7 @@ class DetailScreen extends StatelessWidget {
 }
 
 class DetailPage extends StatefulWidget {
+  // Переданный параметр маршрута и направления
   final dynamic sKey;
   final dynamic way;
   DetailPage({Key key, this.sKey, this.way}) : super(key: key);
@@ -37,18 +42,26 @@ class _DetailPageState extends State<DetailPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      // Парсинг остановок и времени прибытия автобуса на них
       child: FutureBuilder(
         builder: (context, snapshot) {
+          // Перевод из json в массив данных
           List<dynamic> jsonData = json.decode(snapshot.data.toString());
+          // Проверка загруженны ли данные
           switch (snapshot.connectionState) {
+            // Вывод текста об ожиданнии, пока данные загружаются
             case ConnectionState.waiting:
               return Text("Load...");
             default:
+              // Стандартная проверка на ошибки при загрузке
               if (snapshot.hasError)
                 return Text('Error: ${snapshot.error}');
+              // Вывод информации на экран после загрузки и отсутствии ошибки
               else {
+                // Сортировка по маршруту
                 var sortData =
                     jsonData.firstWhere((el) => el['bus'] == widget.sKey);
+                //Создание листа из полученных данных
                 return ListView.builder(
                   itemCount: sortData['routes'][widget.way.toString()].length,
                   itemBuilder: (ctx, inx) {
@@ -62,9 +75,11 @@ class _DetailPageState extends State<DetailPage> {
                         sortData['routes'][widget.way.toString()][inx]['title'],
                       ),
                       onTap: () {
+                        // Вывод времени в диалоговом окне
                         showDialog(
                           context: context,
                           builder: (context) {
+                            // Разделение строки в массив по спец символу
                             var busTime = sortData['routes']
                                     [widget.way.toString()][inx]['time']
                                 .toString()

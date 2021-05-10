@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:npbustimetable_v2/src/screens/DetailScreen.dart';
 
+//Главная страница приложения
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key key}) : super(key: key);
 
@@ -25,8 +26,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  // Получение числового значения дня недели
   final int getDayOnWeek = DateTime.now().day;
-
+  //Вывод текста в зависимости от дня недели
   String workbleDay(day) {
     if (day > 0 && day < 4) {
       return "Будни";
@@ -35,6 +37,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  // Проверка является ли день будним или выходным
   bool isWorkbleWay(day) {
     if (day > 0 && day < 4) {
       return true;
@@ -46,16 +49,22 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      // Парсинг данных из .json объекта и ввывод асинхронных данных
       child: FutureBuilder(
         builder: (context, snapshot) {
+          // Конвертация из json в массив данных
           var showData = json.decode(snapshot.data.toString());
+          // Проверка загруженны ли данные
           switch (snapshot.connectionState) {
+            // Вывод текста об ожиданнии, пока данные загружаются
             case ConnectionState.waiting:
               return Text("Load...");
             default:
+              // Стандартная проверка на ошибки при загрузке
               if (snapshot.hasError)
                 return Text('Error: ${snapshot.error}');
               else
+                // Вывод информации на экран после загрузки и отсутствии ошибки
                 return _buildListView(showData);
           }
         },
@@ -75,6 +84,7 @@ class _HomePageState extends State<HomePage> {
           ),
           title: Text(showData[index]['routes'][0]['direction']),
           onTap: () {
+            // Построение нижнего диалогового окна
             showModalBottomSheet(
               context: context,
               builder: (build) {
@@ -93,6 +103,7 @@ class _HomePageState extends State<HomePage> {
                         onTap: () {
                           Navigator.push(
                             context,
+                            // Переход к DetailScreen по средствам маршрутизации
                             MaterialPageRoute(
                               builder: (ctx) => DetailScreen(
                                 titlePage: showData[index]['routes'][inx]
