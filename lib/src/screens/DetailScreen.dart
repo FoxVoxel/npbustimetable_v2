@@ -87,12 +87,21 @@ class _DetailPageState extends State<DetailPage> {
                             return AlertDialog(
                               title: Text("Время прибытия"),
                               content: Container(
-                                height: 150,
-                                child: ListView.builder(
-                                  itemCount: busTime.length,
-                                  itemBuilder: (ctx, inx) => ListTile(
-                                    title: Text(busTime[inx]),
-                                  ),
+                                width: MediaQuery.of(context).size.width * 0.9,
+                                height: MediaQuery.of(context).size.height * 0.2,
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                      child: ListView.builder(
+
+                                          itemCount: busTime.length,
+                                          itemBuilder: (ctx, inx) => ListTile(
+                                            title: Text(busTime[inx]
+                                            ),
+                                      ),
+                                    ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             );
